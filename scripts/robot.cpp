@@ -240,6 +240,7 @@ int main()
     cout << mensaje << endl;*/
 
     //Exercise 2
+    /*
     myrobot.set(30,50,90*M_PI/180);
     myrobot.move(-90*M_PI/180,0);
     myrobot.move(0,15);
@@ -250,6 +251,44 @@ int main()
     myrobot.move(-90*M_PI/180,0);
     myrobot.move(0,10);
     mensaje = myrobot.read_sensors();
-    cout << mensaje << endl;
+    cout << mensaje << endl;*/
+
+    int n = 1000;
+    Robot p[n];
+
+    for (int i=0; i<n; i++){
+        p[i].set_noise(0.05,0.05,5.0);
+        cout << p[i].show_pose() << endl;
+    }
+
+    Robot p2[n];
+    for (int i=0; i<n; i++){
+        p2[i]=p[i].move(0.1,5.0);
+        p[i]=p2[i];
+        cout << p[i].show_pose() << endl;
+    }
+    double w[n];
+    for(int i; i<<n; i++){
+        w[i] = p[i].measurement_prob(z);
+        cout << w[i] << endl;
+    }
+
+    Robot p3[n];
+    int index = gen_real_random()*n;
+    double beta = 0.0;
+    double mw = max(w,n);
+    for (int i; i<n; i++){
+        beta = gen_real_random()*2.0*mw;
+        while(beta > w[index]){
+            beta = w[index];
+            index = mod((index+1), n);
+        }
+        p3[i] = p[index];
+    }
+    for (int k=0; k<n; k++){
+        p[k] = p3[k];
+        cout << p[k].show_pose() << endl;
+    }
+
     return 0;
 }
